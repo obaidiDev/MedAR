@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-lang="ar">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>مدار · MedAr — تجارب AI/AR غامرة في المدينة المنورة</title>
+<meta name="description" content="مدار: تجربة غامرة بالذكاء الاصطناعي والواقع المعزز تُحيي المواقع التاريخية في المدينة المنورة. Medar: an AI/AR immersive heritage experience for historic sites in Madinah." />
+<meta property="og:title" content="مدار · MedAr — Immersive Heritage of Madinah" />
+<meta property="og:description" content="AI + AR storytelling that brings Madinah's historic sites to life." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://medar.website/" />
+<meta property="og:image" content="https://medar.website/images/medar-app-tour.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://medar.website/" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    /* Deep night & gold palette */
+    --night-0: #07090E;        /* deepest */
+    --night-1: #0B0F18;        /* base bg */
+    --night-2: #121826;        /* surface */
+    --night-3: #1B2435;        /* raised surface */
+    --night-4: #2A3447;        /* border */
+    --ink:     #E8E4D8;        /* primary text on dark */
+    --ink-2:   #B8B3A4;        /* secondary text */
+    --ink-3:   #7D7868;        /* tertiary text */
+    --gold:    #C9A24B;        /* primary gold */
+    --gold-2:  #E5C77A;        /* lighter gold */
+    --gold-3:  #8B6F2E;        /* deep gold */
+    --copper:  #B87333;        /* warm accent */
+    --emerald: #1F4D3F;        /* heritage accent (Madinah green, deep) */
+    --emerald-2:#2E6B57;
+    --danger:  #C2410C;
+
+    --r-sm: 4px;
+    --r-md: 10px;
+    --r-lg: 18px;
+
+    --shadow-1: 0 1px 0 rgba(255,255,255,0.04) inset, 0 12px 30px rgba(0,0,0,0.4);
+    --shadow-2: 0 20px 60px rgba(0,0,0,0.55);
+
+    --maxw: 1240px;
+
+    --font-display: 'Cormorant Garamond', 'Amiri', serif;
+    --font-body-en: 'Cormorant Garamond', Georgia, serif;
+    --font-body-ar: 'Tajawal', 'Amiri', system-ui, sans-serif;
+    --font-arabic-display: 'Amiri', 'Tajawal', serif;
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{
+    margin: 0; padding: 0;
+    background: var(--night-1);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body{
+    font-family: var(--font-body-ar);
+    font-weight: 400;
+    line-height: 1.7;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse 1200px 600px at 80% -10%, rgba(201,162,75,0.10), transparent 60%),
+      radial-gradient(ellipse 900px 500px at 0% 30%, rgba(31,77,63,0.10), transparent 60%),
+      linear-gradient(180deg, #0A0D14 0%, var(--night-1) 100%);
+    background-attachment: fixed;
+  }
+  html[data-lang="en"] body{ font-family: var(--font-body-en); line-height: 1.6; }
+  html[lang="en"]{ direction: ltr; }
+
+  /* Subtle grain */
+  body::before{
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.7'/></svg>");
+  }
+
+  a{ color: var(--gold-2); text-decoration: none; }
+  a:hover{ color: var(--gold); }
+
+  .container{
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 28px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position: sticky; top: 0;
+    z-index: 50;
+    background: linear-gradient(180deg, rgba(7,9,14,0.92), rgba(7,9,14,0.72));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(201,162,75,0.12);
+  }
+  .nav-inner{
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 28px;
+    max-width: var(--maxw);
+    margin: 0 auto;
+  }
+  .brand{
+    display: flex; align-items: center; gap: 12px;
+    color: var(--ink);
+  }
+  .brand-mark{ width: 38px; height: 38px; }
+  .brand-name{
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .brand-name .ar{ font-family: var(--font-arabic-display); font-weight: 700; }
+  .brand-name .accent{ color: var(--gold-2); }
+  .brand-tag{
+    font-size: 11px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    margin-top: 2px;
+  }
+
+  .nav-links{
+    display: flex; align-items: center; gap: 28px;
+    list-style: none; margin: 0; padding: 0;
+  }
+  .nav-links a{
+    color: var(--ink-2);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 500;
+    font-family: var(--font-body-en);
+    transition: color 0.2s ease;
+  }
+  html[data-lang="ar"] .nav-links a{
+    font-family: var(--font-body-ar);
+    font-size: 14px;
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+  .nav-links a:hover{ color: var(--gold-2); }
+
+  .lang-toggle{
+    display: inline-flex; align-items: center;
+    background: var(--night-3);
+    border: 1px solid var(--night-4);
+    border-radius: 999px;
+    padding: 4px;
+    cursor: pointer;
+    font-family: var(--font-body-en);
+  }
+  .lang-toggle button{
+    background: transparent; border: 0;
+    color: var(--ink-3);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .lang-toggle button.active{
+    background: var(--gold);
+    color: var(--night-0);
+  }
+
+  .nav-mobile-toggle{ display: none; background: transparent; border: 0; color: var(--ink); cursor: pointer; }
+
+  @media (max-width: 880px){
+    .nav-links{ display: none; }
+    .nav-mobile-toggle{ display: inline-flex; }
+    .nav-inner.open + .mobile-menu{ display: block; }
+  }
+  .mobile-menu{
+    display: none;
+    padding: 16px 28px 24px;
+    border-top: 1px solid rgba(201,162,75,0.1);
+    background: var(--night-1);
+  }
+  .mobile-menu a{ display: block; padding: 10px 0; color: var(--ink-2); }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position: relative;
+    padding: 120px 0 140px;
+    overflow: hidden;
+  }
+  .hero::after{
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 700px 400px at 50% 90%, rgba(201,162,75,0.08), transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid{
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 60px;
+    align-items: center;
+  }
+  @media (max-width: 980px){
+    .hero{ padding: 80px 0 100px; }
+    .hero-grid{ grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  .eyebrow{
+    display: inline-flex; align-items: center; gap: 10px;
+    color: var(--gold-2);
+    font-family: var(--font-body-en);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    margin-bottom: 24px;
+  }
+  html[data-lang="ar"] .eyebrow{
+    font-family: var(--font-body-ar);
+    font-size: 13px;
+    text-transform: none;
+    letter-spacing: 0.12em;
+  }
+  .eyebrow::before{
+    content: "";
+    width: 28px; height: 1px;
+    background: var(--gold);
+  }
+
+  .h1{
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(40px, 6vw, 78px);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    margin: 0 0 24px;
+    color: var(--ink);
+  }
+  html[data-lang="ar"] .h1{
+    font-family: var(--font-arabic-display);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+  .h1 em{
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold-2);
+  }
+  html[data-lang="ar"] .h1 em{
+    font-style: normal;
+    color: var(--gold-2);
+  }
+
+  .h2{
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(30px, 4vw, 48px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0 0 16px;
+  }
+  html[data-lang="ar"] .h2{
+    font-family: var(--font-arabic-display);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .lede{
+    font-size: clamp(16px, 1.5vw, 19px);
+    color: var(--ink-2);
+    max-width: 56ch;
+    margin: 0 0 36px;
+  }
+
+  .cta-row{ display: flex; flex-wrap: wrap; gap: 14px; }
+  .btn{
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 26px;
+    border-radius: 999px;
+    font-family: var(--font-body-en);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  html[data-lang="ar"] .btn{
+    font-family: var(--font-body-ar);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: none;
+  }
+  .btn-primary{
+    background: linear-gradient(180deg, var(--gold-2), var(--gold));
+    color: var(--night-0);
+    box-shadow: 0 10px 30px rgba(201,162,75,0.25);
+  }
+  .btn-primary:hover{ transform: translateY(-2px); color: var(--night-0); }
+  .btn-ghost{
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--night-4);
+  }
+  .btn-ghost:hover{ border-color: var(--gold); color: var(--gold-2); }
+  .btn .arrow{ display: inline-block; transition: transform 0.2s ease; }
+  html[data-lang="ar"] .btn .arrow{ transform: scaleX(-1); }
+  .btn:hover .arrow{ transform: translateX(3px); }
+  html[data-lang="ar"] .btn:hover .arrow{ transform: scaleX(-1) translateX(3px); }
+
+  /* Hero visual: phone with AR overlay */
+  .hero-visual{
+    position: relative;
+    width: 100%;
+  }
+  .hero-visual svg{ width: 100%; height: 100%; display: block; }
+
+  .hero-photo{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    border: 1px solid rgba(201,162,75,0.25);
+    box-shadow: var(--shadow-2);
+  }
+  .hero-photo img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.92) contrast(1.05) saturate(1.05);
+  }
+  /* Product mockup variant — show full UI, don't crop, no overlay */
+  .hero-product{
+    aspect-ratio: 5 / 4;
+    background: #0a0d14;
+    border-color: rgba(201,162,75,0.35);
+  }
+  .hero-product img{
+    object-fit: cover;
+    filter: brightness(1) contrast(1.02) saturate(1.02);
+  }
+  .hero-product::after{
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 60px rgba(7,9,14,0.4);
+  }
+  .hero-photo::after{
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 100%, rgba(7,9,14,0.6), transparent 60%),
+      linear-gradient(180deg, rgba(7,9,14,0.15) 0%, rgba(7,9,14,0) 30%, rgba(7,9,14,0.55) 100%);
+    pointer-events: none;
+  }
+  /* Suppress the dark vignette for the product mockup so UI stays clean */
+  .hero-product::after{
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 100%, rgba(7,9,14,0.25), transparent 70%);
+    box-shadow: inset 0 0 60px rgba(7,9,14,0.45);
+  }
+  .hero-overlay{
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+  }
+
+  /* Photo-based site card visuals */
+  .site-photo{
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    position: relative;
+    background: #000;
+  }
+  .site-photo img{
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.95) contrast(1.04) saturate(1.05);
+    transition: transform 0.6s ease;
+  }
+  .site-card:hover .site-photo img{ transform: scale(1.04); }
+  .site-photo::after{
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(7,9,14,0) 50%, rgba(7,9,14,0.7) 100%);
+    pointer-events: none;
+  }
+  .site-photo-frame{
+    position: absolute; inset: 12px;
+    pointer-events: none;
+  }
+  .site-photo-frame svg{ width: 100%; height: 100%; display: block; }
+
+  /* Gallery (scenes) using photos */
+  .scene-photo{
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.94) contrast(1.06) saturate(1.05);
+    transition: transform 0.6s ease, filter 0.4s ease;
+  }
+  .scene:hover .scene-photo{ transform: scale(1.04); filter: brightness(1.02) contrast(1.06) saturate(1.1); }
+  .scene{ background: #000; }
+  .scene::after{
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(7,9,14,0) 55%, rgba(7,9,14,0.85) 100%);
+    pointer-events: none;
+  }
+  .scene .scene-cap{ z-index: 2; }
+
+  /* Architecture detail block (the dimensioned diagram) */
+  .arch-detail{
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: center;
+    padding: 32px;
+    border: 1px solid var(--night-4);
+    border-radius: var(--r-lg);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+  }
+  @media (max-width: 880px){ .arch-detail{ grid-template-columns: 1fr; } }
+  .arch-detail-img{
+    border-radius: var(--r-md);
+    overflow: hidden;
+    border: 1px solid var(--night-4);
+    background: #1a1208;
+  }
+  .arch-detail-img img{ width: 100%; height: auto; display: block; }
+  .arch-detail h4{
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 24px;
+    margin: 0 0 12px;
+  }
+  html[data-lang="ar"] .arch-detail h4{
+    font-family: var(--font-arabic-display);
+    font-weight: 700;
+  }
+  .arch-detail p{ color: var(--ink-2); margin: 0 0 12px; }
+  .arch-detail .specs{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .arch-detail .spec{
+    padding: 12px 14px;
+    border: 1px solid var(--night-4);
+    border-radius: var(--r-sm);
+    background: rgba(11,15,24,0.5);
+  }
+  .arch-detail .spec .v{
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--gold-2);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .arch-detail .spec .k{ font-size: 12px; color: var(--ink-3); }
+
+  /* ---------- MARQUEE strip ---------- */
+  .strip{
+    border-top: 1px solid rgba(201,162,75,0.12);
+    border-bottom: 1px solid rgba(201,162,75,0.12);
+    padding: 22px 0;
+    background: rgba(7,9,14,0.5);
+  }
+  .strip-inner{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 24px;
+    color: var(--ink-3);
+    font-family: var(--font-body-en);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+  html[data-lang="ar"] .strip-inner{
+    font-family: var(--font-body-ar);
+    font-size: 13px;
+    text-transform: none;
+    letter-spacing: 0.06em;
+  }
+  .strip-inner span::before{
+    content: "✦";
+    color: var(--gold);
+    margin: 0 12px;
+  }
+  .strip-inner span:first-child::before{ content: ""; margin: 0; }
+
+  /* ---------- SECTIONS ---------- */
+  section{ padding: 120px 0; position: relative; z-index: 2; }
+  @media (max-width: 880px){ section{ padding: 80px 0; } }
+
+  .section-header{ max-width: 760px; margin-bottom: 56px; }
+
+  /* ---------- PROBLEM / SOLUTION ---------- */
+  .ps-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+  @media (max-width: 880px){ .ps-grid{ grid-template-columns: 1fr; } }
+
+  .ps-card{
+    padding: 36px;
+    border-radius: var(--r-lg);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+    border: 1px solid var(--night-4);
+    position: relative;
+    overflow: hidden;
+  }
+  .ps-card .label{
+    font-family: var(--font-body-en);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-bottom: 18px;
+  }
+  html[data-lang="ar"] .ps-card .label{
+    font-family: var(--font-body-ar);
+    font-size: 13px;
+    text-transform: none;
+    letter-spacing: 0.08em;
+  }
+  .ps-problem .label{ color: var(--danger); }
+  .ps-solution .label{ color: var(--gold-2); }
+  .ps-card h3{
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.2;
+    margin: 0 0 14px;
+  }
+  html[data-lang="ar"] .ps-card h3{
+    font-family: var(--font-arabic-display);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .ps-card p{ color: var(--ink-2); margin: 0 0 12px; }
+  .ps-card ul{ list-style: none; padding: 0; margin: 18px 0 0; color: var(--ink-2); }
+  .ps-card ul li{ padding: 8px 0; border-top: 1px dashed rgba(201,162,75,0.15); }
+  .ps-card ul li:first-child{ border-top: 0; }
+  .ps-solution{
+    background: linear-gradient(180deg, rgba(201,162,75,0.05), rgba(201,162,75,0));
+    border-color: rgba(201,162,75,0.25);
+  }
+
+  /* ---------- STATS ---------- */
+  .stats-intro{ text-align: center; max-width: 720px; margin: 0 auto 64px; }
+  .stats-intro .h2{ text-align: center; }
+  .stats-intro p{ color: var(--ink-2); }
+
+  .stats-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 980px){ .stats-grid{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 540px){ .stats-grid{ grid-template-columns: 1fr; } }
+
+  .stat{
+    padding: 32px 28px;
+    border: 1px solid var(--night-4);
+    border-radius: var(--r-lg);
+    background: rgba(11,15,24,0.6);
+    position: relative;
+    overflow: hidden;
+  }
+  .stat::before{
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.4;
+  }
+  .stat .num{
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(38px, 4vw, 56px);
+    line-height: 1;
+    color: var(--gold-2);
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .stat .label-sm{
+    font-family: var(--font-body-en);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--ink-3);
+    margin-bottom: 6px;
+  }
+  html[data-lang="ar"] .stat .label-sm{
+    font-family: var(--font-body-ar);
+    font-size: 13px;
+    text-transform: none;
+    letter-spacing: 0.06em;
+  }
+  .stat .text{ color: var(--ink-2); font-size: 14px; line-height: 1.5; }
+  .stat cite{
+    display: block;
+    margin-top: 12px;
+    font-style: normal;
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.05em;
+  }
+  .stat cite a{ color: var(--ink-3); border-bottom: 1px dotted var(--night-4); }
+  .stat cite a:hover{ color: var(--gold-2); border-color: var(--gold); }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 980px){ .how-grid{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 540px){ .how-grid{ grid-template-columns: 1fr; } }
+
+  .how-card{
+    padding: 32px 28px;
+    border: 1px solid var(--night-4);
+    border-radius: var(--r-lg);
+    background: linear-gradient(180deg, var(--night-2), var(--night-1));
+    position: relative;
+  }
+  .how-num{
+    position: absolute;
+    top: 18px;
+    inset-inline-end: 22px;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 40px;
+    color: var(--gold-3);
+    opacity: 0.6;
+    line-height: 1;
+  }
+  .how-icon{
+    width: 56px; height: 56px;
+    margin-bottom: 22px;
+    color: var(--gold-2);
+  }
+  .how-card h4{
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 22px;
+    margin: 0 0 10px;
+  }
+  html[data-lang="ar"] .how-card h4{
+    font-family: var(--font-arabic-display);
+    font-weight: 700;
+  }
+  .how-card p{ color: var(--ink-2); margin: 0; font-size: 14.5px; }
+
+  /* ---------- SITES ---------- */
+  .sites-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  @media (max-width: 980px){ .sites-grid{ grid-template-columns: 1fr; } }
+
+  /* Wide site card spans both columns, places portrait phone next to text */
+  .site-card-wide{
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .site-card-wide .site-photo-portrait{
+    flex: 0 0 38%;
+    aspect-ratio: 3 / 4;
+    max-width: 420px;
+  }
+  .site-card-wide .site-body{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px 48px;
+  }
+  @media (max-width: 880px){
+    .site-card-wide{ flex-direction: column; }
+    .site-card-wide .site-photo-portrait{
+      flex: none;
+      width: 100%;
+      max-width: none;
+      aspect-ratio: 4 / 5;
+    }
+    .site-card-wide .site-body{ padding: 30px 32px 32px; }
+  }
+
+  .site-card{
+    border: 1px solid var(--night-4);
+    border-radius: var(--r-lg);
+    background: var(--night-2);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .site-visual{
+    aspect-ratio: 16 / 10;
+    background: linear-gradient(180deg, #1a1208, #0a0d14);
+    position: relative;
+    overflow: hidden;
+  }
+  .site-visual svg{ width: 100%; height: 100%; display: block; }
+  .site-body{ padding: 30px 32px 32px; }
+  .site-body .tag{
+    display: inline-block;
+    font-family: var(--font-body-en);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-2);
+    padding: 4px 10px;
+    border: 1px solid rgba(201,162,75,0.3);
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  html[data-lang="ar"] .site-body .tag{
+    font-family: var(--font-body-ar);
+    font-size: 12px;
+    text-transform: none;
+    letter-spacing: 0.06em;
+  }
+  .site-body h3{
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 28px;
+    margin: 0 0 8px;
+  }
+  html[data-lang="ar"] .site-body h3{
+    font-family: var(--font-arabic-display);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .site-body .sub{ color: var(--ink-3); font-size: 14px; margin-bottom: 14px; font-style: italic; }
+  html[data-lang="ar"] .site-body .sub{ font-style: normal; }
+  .site-body p{ color: var(--ink-2); margin: 0 0 14px; }
+  .site-meta{
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 18px;
+  }
+  .site-meta span{
+    font-family: var(--font-body-en);
+    font-size: 11px;
+    color: var(--ink-3);
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--night-4);
+    border-radius: var(--r-sm);
+    letter-spacing: 0.08em;
+  }
+  html[data-lang="ar"] .site-meta span{
+    font-family: var(--font-body-ar);
+    font-size: 12px;
+    letter-spacing: 0;
+  }
+
+  /* ---------- EXPERIENCE PREVIEW (scenes) ---------- */
+  .scenes-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 56px;
+  }
+  @media (max-width: 880px){ .scenes-grid{ grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 540px){ .scenes-grid{ grid-template-columns: 1fr; } }
+  .scene{
+    aspect-ratio: 4 / 3;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    border: 1px solid var(--night-4);
+    position: relative;
+  }
+  .scene svg{ width: 100%; height: 100%; display: block; }
+  .scene-cap{
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 16px 18px;
+    background: linear-gradient(180deg, transparent, rgba(7,9,14,0.92));
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 500;
+  }
+  html[data-lang="ar"] .scene-cap{
+    font-family: var(--font-arabic-display);
+    font-weight: 700;
+  }
+
+  /* ---------- TEAM ---------- */
+  .team-grid{
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 60px;
+    align-items: center;
+  }
+  @media (max-width: 880px){ .team-grid{ grid-template-columns: 1fr; gap: 40px; } }
+  .team-stats{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 28px;
+  }
+  .team-stat{
+    padding: 22px;
+    border: 1px solid var(--night-4);
+    border-radius: var(--r-md);
+    background: rgba(11,15,24,0.6);
+  }
+  .team-stat .num{
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--gold-2);
+    font-weight: 500;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .team-stat .lbl{ font-size: 13px; color: var(--ink-3); }
+  .team-visual{ position: relative; }
+  .team-visual svg{ width: 100%; height: auto; display: block; }
+
+  /* ---------- ROADMAP ---------- */
+  .roadmap{
+    position: relative;
+    padding: 16px 0;
+  }
+  .roadmap-track{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    position: relative;
+  }
+  @media (max-width: 880px){ .roadmap-track{ grid-template-columns: 1fr; } }
+  .roadmap-track::before{
+    content: "";
+    position: absolute;
+    top: 28px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold-3), var(--gold), var(--gold-3));
+    opacity: 0.4;
+  }
+  @media (max-width: 880px){ .roadmap-track::before{ display: none; } }
+  .milestone{
+    position: relative;
+    padding: 56px 8px 0;
+  }
+  .milestone::before{
+    content: "";
+    position: absolute;
+    top: 22px; left: 50%;
+    transform: translateX(-50%);
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 0 4px var(--night-1), 0 0 0 5px rgba(201,162,75,0.3);
+  }
+  @media (max-width: 880px){
+    .milestone{ padding: 0 0 0 28px; border-inline-start: 1px solid var(--night-4); margin-bottom: 24px; }
+    .milestone::before{ top: 6px; left: -7px; transform: none; }
+    html[data-lang="ar"] .milestone::before{ left: auto; right: -7px; }
+  }
+  .milestone .when{
+    font-family: var(--font-body-en);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold-2);
+    margin-bottom: 10px;
+  }
+  html[data-lang="ar"] .milestone .when{
+    font-family: var(--font-body-ar);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: none;
+  }
+  .milestone h4{
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 19px;
+    margin: 0 0 8px;
+    color: var(--ink);
+  }
+  html[data-lang="ar"] .milestone h4{
+    font-family: var(--font-arabic-display);
+    font-weight: 700;
+  }
+  .milestone p{ color: var(--ink-2); font-size: 14px; margin: 0; }
+
+  /* ---------- CONTACT ---------- */
+  .contact-wrap{
+    border: 1px solid rgba(201,162,75,0.3);
+    border-radius: var(--r-lg);
+    background:
+      radial-gradient(ellipse 600px 300px at 20% 0%, rgba(201,162,75,0.08), transparent 60%),
+      linear-gradient(180deg, var(--night-2), var(--night-1));
+    padding: 56px;
+  }
+  @media (max-width: 880px){ .contact-wrap{ padding: 32px; } }
+  .contact-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+  @media (max-width: 880px){ .contact-grid{ grid-template-columns: 1fr; gap: 24px; } }
+  .field{ display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .field label{
+    font-family: var(--font-body-en);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-3);
+  }
+  html[data-lang="ar"] .field label{
+    font-family: var(--font-body-ar);
+    font-size: 13px;
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+  .field input, .field textarea, .field select{
+    background: rgba(7,9,14,0.6);
+    border: 1px solid var(--night-4);
+    border-radius: var(--r-sm);
+    padding: 12px 14px;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 15px;
+    transition: border-color 0.2s ease;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus{
+    outline: none;
+    border-color: var(--gold);
+  }
+  .field textarea{ min-height: 110px; resize: vertical; }
+  .contact-side h3{
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 28px;
+    margin: 0 0 12px;
+  }
+  html[data-lang="ar"] .contact-side h3{
+    font-family: var(--font-arabic-display);
+    font-weight: 700;
+  }
+  .contact-side p{ color: var(--ink-2); }
+  .contact-side ul{ list-style: none; padding: 0; margin: 22px 0 0; }
+  .contact-side ul li{
+    padding: 12px 0;
+    border-top: 1px solid var(--night-4);
+    display: flex; gap: 14px; align-items: center;
+    color: var(--ink-2);
+    font-size: 14.5px;
+  }
+  .contact-side ul li svg{ width: 18px; height: 18px; color: var(--gold-2); flex: none; }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top: 1px solid rgba(201,162,75,0.1);
+    padding: 48px 0 32px;
+    background: var(--night-0);
+    position: relative; z-index: 2;
+  }
+  .footer-inner{
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 24px;
+    max-width: var(--maxw); margin: 0 auto; padding: 0 28px;
+  }
+  .footer-inner small{ color: var(--ink-3); font-size: 12px; }
+
+  /* ---------- LANG VISIBILITY ---------- */
+  [data-en], [data-ar]{ display: none; }
+  html[data-lang="en"] [data-en]{ display: revert; }
+  html[data-lang="ar"] [data-ar]{ display: revert; }
+  /* For inline spans, use display: inline */
+  html[data-lang="en"] span[data-en], html[data-lang="en"] em[data-en]{ display: inline; }
+  html[data-lang="ar"] span[data-ar], html[data-lang="ar"] em[data-ar]{ display: inline; }
+
+  /* Reveal animation */
+  .reveal{
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.in{ opacity: 1; transform: none; }
+
+</style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<nav class="nav">
+  <div class="nav-inner" id="navInner">
+    <a href="#top" class="brand" aria-label="Medar home">
+      <!-- Logo: orbit ring around 'med' + AR viewfinder bracket -->
+      <svg class="brand-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#E5C77A"/>
+            <stop offset="100%" stop-color="#8B6F2E"/>
+          </linearGradient>
+        </defs>
+        <!-- Outer orbit (the 'مدار' / orbit) -->
+        <circle cx="32" cy="32" r="28" stroke="url(#g1)" stroke-width="1.5" fill="none" opacity="0.55"/>
+        <circle cx="32" cy="32" r="23" stroke="url(#g1)" stroke-width="0.8" fill="none" opacity="0.35" stroke-dasharray="2 4"/>
+        <!-- AR viewfinder corner brackets -->
+        <path d="M10 18 L10 10 L18 10" stroke="#E5C77A" stroke-width="2" stroke-linecap="square" fill="none"/>
+        <path d="M54 18 L54 10 L46 10" stroke="#E5C77A" stroke-width="2" stroke-linecap="square" fill="none"/>
+        <path d="M10 46 L10 54 L18 54" stroke="#E5C77A" stroke-width="2" stroke-linecap="square" fill="none"/>
+        <path d="M54 46 L54 54 L46 54" stroke="#E5C77A" stroke-width="2" stroke-linecap="square" fill="none"/>
+        <!-- Center mark: stylized 'م' dot (Madinah) -->
+        <circle cx="32" cy="32" r="5.5" fill="url(#g1)"/>
+        <circle cx="32" cy="32" r="2" fill="#0B0F18"/>
+      </svg>
+      <div>
+        <div class="brand-name">
+          <span class="accent">Med</span><span>Ar</span>
+        </div>
+        <div class="brand-tag" data-en>Madinah · Augmented</div>
+        <div class="brand-tag" data-ar>المدينة · معزّزة</div>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#problem" data-en>Problem</a><a href="#problem" data-ar>التحدي</a></li>
+      <li><a href="#stats" data-en>Market</a><a href="#stats" data-ar>السوق</a></li>
+      <li><a href="#how" data-en>How it works</a><a href="#how" data-ar>كيف يعمل</a></li>
+      <li><a href="#sites" data-en>Sites</a><a href="#sites" data-ar>المواقع</a></li>
+      <li><a href="#roadmap" data-en>Roadmap</a><a href="#roadmap" data-ar>خارطة الطريق</a></li>
+      <li><a href="#team" data-en>About</a><a href="#team" data-ar>من نحن</a></li>
+      <li>
+        <div class="lang-toggle" role="group" aria-label="Language switch">
+          <button id="langAr" class="active" data-lang-btn="ar">AR</button>
+          <button id="langEn" data-lang-btn="en">EN</button>
+        </div>
+      </li>
+    </ul>
+
+    <button class="nav-mobile-toggle" id="navToggle" aria-label="Menu">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#problem" data-en>Problem</a><a href="#problem" data-ar>التحدي</a>
+    <a href="#stats" data-en>Market</a><a href="#stats" data-ar>السوق</a>
+    <a href="#how" data-en>How it works</a><a href="#how" data-ar>كيف يعمل</a>
+    <a href="#sites" data-en>Sites</a><a href="#sites" data-ar>المواقع</a>
+    <a href="#roadmap" data-en>Roadmap</a><a href="#roadmap" data-ar>خارطة الطريق</a>
+    <a href="#team" data-en>About</a><a href="#team" data-ar>من نحن</a>
+    <a href="#contact" data-en>Contact</a><a href="#contact" data-ar>تواصل</a>
+    <div style="margin-top:14px">
+      <div class="lang-toggle">
+        <button data-lang-btn="ar" class="active">AR</button>
+        <button data-lang-btn="en">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero" id="top">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">
+          <span data-ar>منصة تجارب غامرة · للتراث الإسلامي</span>
+          <span data-en>Immersive heritage platform · Islamic history</span>
+        </div>
+
+        <h1 class="h1">
+          <span data-ar>
+            مَدار يُعيد إحياء قصص <em>المدينة المنورة</em><br>
+            أمام عينيك.
+          </span>
+          <span data-en>
+            Medar brings <em>Madinah's</em> stories to life,<br>
+            in the place they happened.
+          </span>
+        </h1>
+
+        <p class="lede">
+          <span data-ar>
+            تجربة بصرية وصوتية بالذكاء الاصطناعي والواقع المعزز، تُوصل الزائر إلى المشهد التاريخي فوق الأرض نفسها — من الصُّفّة إلى بئر غَرَس — برواية موثّقة وأداء سينمائي بصري وسمعي يحترم القيمة الدينية للمكان.
+          </span>
+          <span data-en>
+            An AI-narrated, AR-anchored experience that overlays history on the very ground where it happened — from Al-Suffah to Bir Ghars — with a cinematic, source-faithful storytelling that respects the sanctity of place.
+          </span>
+        </p>
+
+        <div class="cta-row">
+          <a href="#contact" class="btn btn-primary">
+            <span data-ar>اطلب عرضًا تجريبيًا</span>
+            <span data-en>Request a demo</span>
+            <span class="arrow">→</span>
+          </a>
+          <a href="#how" class="btn btn-ghost">
+            <span data-ar>كيف يعمل مَدار</span>
+            <span data-en>How Medar works</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero visual: real Medar product mockup -->
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-photo hero-product">
+          <img src="images/medar-app-tour.jpg" alt="Medar AR Tour Guide interface showing Salman Al-Farisi as AI heritage guide at Bir Al-Fuqayr in Madinah" />
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== STRIP ===================== -->
+<div class="strip">
+  <div class="strip-inner">
+    <span data-en>Built for Vision 2030</span><span data-ar>متوافق مع رؤية ٢٠٣٠</span>
+    <span data-en>AI-powered storytelling</span><span data-ar>سرد بالذكاء الاصطناعي</span>
+    <span data-en>WebAR · no app required</span><span data-ar>واقع معزز عبر الويب</span>
+    <span data-en>Bilingual ar / en</span><span data-ar>ثنائي اللغة عربي / إنجليزي</span>
+    <span data-en>Heritage-respectful</span><span data-ar>محترِم لقدسية المكان</span>
+  </div>
+</div>
+
+<!-- ===================== PROBLEM / SOLUTION ===================== -->
+<section id="problem">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="h2">
+        <span data-ar>الحجّاج والزوّار يصِلون… لكنّ القصة تَغيب.</span>
+        <span data-en>Visitors arrive. The story doesn't.</span>
+      </h2>
+      <p class="lede">
+        <span data-ar>
+          عشرات الملايين يزورون المدينة المنورة سنويًا، ومع ذلك تظل أهم المواقع التاريخية بلا رواية حيّة على أرضها. لوحات تعريفية صامتة، صور باهتة في كتيّبات، وقصص تستحق أن تُروى.
+        </span>
+        <span data-en>
+          Tens of millions visit Madinah each year, yet most historic sites speak only through static signage and tired brochures. Stories that deserve cinema get a paragraph.
+        </span>
+      </p>
+    </div>
+
+    <div class="ps-grid">
+      <div class="ps-card ps-problem">
+        <div class="label" data-ar>الفجوة اليوم</div>
+        <div class="label" data-en>The gap today</div>
+        <h3>
+          <span data-ar>تجربة لا تليق بعمق القصة</span>
+          <span data-en>The experience doesn't match the depth of the story</span>
+        </h3>
+        <ul>
+          <li data-ar>• مواقع تاريخية بدون سرد بصري على أرض الواقع</li>
+          <li data-en>• Historic sites lacking on-location storytelling</li>
+          <li data-ar>• قِصر فترة الإقامة وضيق الوقت بين العبادة والتنقل</li>
+          <li data-en>• Short stays leave little room for cultural immersion</li>
+          <li data-ar>• محتوى مبعثر وغير موثّق بين المرشدين والتطبيقات</li>
+          <li data-en>• Fragmented, unverified content across guides and apps</li>
+          <li data-ar>• حواجز اللغة لزوّار من ١٧٠+ دولة</li>
+          <li data-en>• Language barriers for visitors from 170+ countries</li>
+        </ul>
+      </div>
+
+      <div class="ps-card ps-solution">
+        <div class="label" data-ar>حلّ مَدار</div>
+        <div class="label" data-en>Medar's answer</div>
+        <h3>
+          <span data-ar>طبقة سرد رقمية فوق المكان نفسه</span>
+          <span data-en>A digital storytelling layer over the place itself</span>
+        </h3>
+        <ul>
+          <li data-ar>• مَشاهد بالواقع المعزز مُرتكزة على المعلَم الفعلي</li>
+          <li data-en>• AR scenes anchored to the physical landmark</li>
+          <li data-ar>• راوي ذكي ثنائي اللغة بأصوات مختلفة لكل شخصية</li>
+          <li data-en>• AI narration, bilingual, with distinct voices per speaker</li>
+          <li data-ar>• محتوى تاريخي مُراجَع ومصدَّق علميًا</li>
+          <li data-en>• Historically reviewed, source-cited content</li>
+          <li data-ar>• تجربة عبر متصفّح الهاتف — بدون تطبيق</li>
+          <li data-en>• Runs in a phone browser — no app install required</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STATS ===================== -->
+<section id="stats">
+  <div class="container">
+    <div class="stats-intro">
+      <h2 class="h2">
+        <span data-ar>سوق ضخم. لحظة مثالية.</span>
+        <span data-en>A vast market. A perfect moment.</span>
+      </h2>
+      <p>
+        <span data-ar>
+          المدينة المنورة من أسرع مدن العالم نموًا في السياحة، والحكومة تَستثمر في التقنيات الغامرة كرافعة لرؤية ٢٠٣٠. هذا هو الزمن المناسب لمنصة سرد رقمية موطنية.
+        </span>
+        <span data-en>
+          Madinah is one of the world's fastest-growing tourism cities, and Saudi Arabia is investing aggressively in immersive technology as a Vision 2030 lever. The window is now.
+        </span>
+      </p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="label-sm" data-ar>زوّار المدينة · ٢٠٢٥</div>
+        <div class="label-sm" data-en>Madinah visitors · 2025</div>
+        <div class="num">21M+</div>
+        <div class="text">
+          <span data-ar>
+            أكثر من ٢١ مليون زائر للمدينة في ٢٠٢٥، مع قفزة ٢٢٪ في الإنفاق السياحي إلى ٥٢ مليار ريال.
+          </span>
+          <span data-en>
+            Over 21 million visitors in 2025, with a 22% surge in tourism spending to SAR 52 billion.
+          </span>
+        </div>
+        <cite><a href="https://www.micetraveladvisor.com/news/article/madinahs-record-breaking-year-discover-the-secrets-behind-its-booming-tourism/" target="_blank" rel="noopener">MICE Travel Advisor, 2026</a></cite>
+      </div>
+
+      <div class="stat">
+        <div class="label-sm" data-ar>نمو ٣ سنوات</div>
+        <div class="label-sm" data-en>3-year growth</div>
+        <div class="num">2.5×</div>
+        <div class="text">
+          <span data-ar>
+            ارتفاع زوار المدينة من ٨٫٢ مليون في ٢٠٢٢ إلى ١٤٫١ مليون في ٢٠٢٣ ثم ١٨ مليون+ في ٢٠٢٤.
+          </span>
+          <span data-en>
+            Madinah visitors rose from 8.2M in 2022 to 14.1M in 2023 and over 18M in 2024.
+          </span>
+        </div>
+        <cite><a href="https://www.spa.gov.sa/en/N2343162" target="_blank" rel="noopener">Saudi Press Agency, 2025</a></cite>
+      </div>
+
+      <div class="stat">
+        <div class="label-sm" data-ar>إشغال الفنادق</div>
+        <div class="label-sm" data-en>Hotel occupancy</div>
+        <div class="num">82%</div>
+        <div class="text">
+          <span data-ar>
+            المدينة تتصدّر مدن المملكة في الإشغال الفندقي بـ~٨٢٪ في الربع الأول من ٢٠٢٦.
+          </span>
+          <span data-en>
+            Madinah leads the kingdom at ~82% hospitality occupancy in Q1 2026.
+          </span>
+        </div>
+        <cite><a href="https://www.micetraveladvisor.com/news/article/madinah-makkah-jeddah-lead-saudi-arabia-tourism-surge-with-nearly-29-million-domestic-travelers-in-q1-2026-amid-rapid-growth/" target="_blank" rel="noopener">MICE Travel Advisor, 2026</a></cite>
+      </div>
+
+      <div class="stat">
+        <div class="label-sm" data-ar>استثمار رؤية ٢٠٣٠ في السياحة</div>
+        <div class="label-sm" data-en>Vision 2030 tourism investment</div>
+        <div class="num">$800B</div>
+        <div class="text">
+          <span data-ar>
+            المملكة تستهدف استثمار نحو ٨٠٠ مليار دولار في قطاع السياحة، مع تركيز على تجارب الواقع المعزز والذكاء الاصطناعي في المواقع التراثية.
+          </span>
+          <span data-en>
+            Saudi Arabia is targeting approximately $800 billion of tourism investment, with a focus on AR/AI experiences at heritage sites.
+          </span>
+        </div>
+        <cite><a href="https://www.travelandtourworld.com/news/article/saudi-arabia-has-a-new-vision-2030-powering-ai-driven-tourism-revolution-transforming-mena-travel-by-2030/" target="_blank" rel="noopener">Travel And Tour World, 2025</a></cite>
+      </div>
+
+      <div class="stat">
+        <div class="label-sm" data-ar>هدف العمرة ٢٠٣٠</div>
+        <div class="label-sm" data-en>Umrah target by 2030</div>
+        <div class="num">30M</div>
+        <div class="text">
+          <span data-ar>
+            يهدف برنامج تجربة الحاج والمعتمر إلى ٣٠ مليون معتمر سنويًا بحلول ٢٠٣٠ — والمدينة المحطّة الثانية لكل زائر تقريبًا.
+          </span>
+          <span data-en>
+            The Pilgrim Experience Program targets 30 million Umrah pilgrims annually by 2030 — and Madinah is the second stop for nearly every one.
+          </span>
+        </div>
+        <cite><a href="https://salaamgateway.com/story/how-saudi-arabia-is-turning-religious-tourism-into-a-growth-engine" target="_blank" rel="noopener">Salaam Gateway, 2025</a></cite>
+      </div>
+
+      <div class="stat">
+        <div class="label-sm" data-ar>زوّار المملكة · ٢٠٣٠</div>
+        <div class="label-sm" data-en>Saudi visitors · 2030 target</div>
+        <div class="num">150M</div>
+        <div class="text">
+          <span data-ar>
+            بعد تجاوز هدف ١٠٠ مليون زائر قبل سبع سنوات من موعده، رفعت الحكومة الهدف إلى ١٥٠ مليون زائر سنويًا.
+          </span>
+          <span data-en>
+            After surpassing the 100M target seven years early, the goal has been raised to 150M visitors annually.
+          </span>
+        </div>
+        <cite><a href="https://www.arabnews.com/node/2601858/business-economy" target="_blank" rel="noopener">Arab News, 2025</a></cite>
+      </div>
+
+      <div class="stat">
+        <div class="label-sm" data-ar>مساهمة السياحة في الناتج</div>
+        <div class="label-sm" data-en>Tourism contribution to GDP</div>
+        <div class="num">10%+</div>
+        <div class="text">
+          <span data-ar>
+            تستهدف المملكة رفع مساهمة السياحة في الناتج المحلي من ٣٪ إلى ١٠٪، ويُتوقّع وصولها إلى ١٦٪ بحلول ٢٠٣٤.
+          </span>
+          <span data-en>
+            Saudi Arabia is raising tourism's GDP contribution from 3% to 10%, on a trajectory toward 16% by 2034.
+          </span>
+        </div>
+        <cite><a href="https://www.arabnews.com/node/2601858/business-economy" target="_blank" rel="noopener">Arab News, 2025</a></cite>
+      </div>
+
+      <div class="stat">
+        <div class="label-sm" data-ar>إنفاق السياحة · النصف الأول ٢٠٢٥</div>
+        <div class="label-sm" data-en>Tourism spending · H1 2025</div>
+        <div class="num">$43B</div>
+        <div class="text">
+          <span data-ar>
+            بلغ الإنفاق السياحي في المملكة ١٦١٫٤ مليار ريال (٤٣ مليار دولار) في النصف الأول من ٢٠٢٥.
+          </span>
+          <span data-en>
+            Tourism spending in Saudi Arabia reached SAR 161.4 billion (US$43 billion) in the first half of 2025.
+          </span>
+        </div>
+        <cite><a href="https://www.travelandtourworld.com/news/article/riyadh-makkah-and-madinah-lead-saudi-arabias-tourism-growth-as-visitor-numbers-climb-get-the-details-here/" target="_blank" rel="noopener">Ministry of Tourism via Travel And Tour World, 2025</a></cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section id="how">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="h2">
+        <span data-ar>كيف يعمل مَدار</span>
+        <span data-en>How Medar works</span>
+      </h2>
+      <p class="lede">
+        <span data-ar>
+          أربع طبقات تتعاون في الخلفية لتقديم لحظة واحدة بسيطة للزائر: يُمسك هاتفه، يوجِّهه نحو المعلَم، فيرى التاريخ.
+        </span>
+        <span data-en>
+          Four layers working together to deliver one simple moment: the visitor lifts a phone, points it at the landmark, and history appears.
+        </span>
+      </p>
+    </div>
+
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">01</div>
+        <svg class="how-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M9 5l1-2h4l1 2"/>
+        </svg>
+        <h4>
+          <span data-ar>التَّعرُّف على المكان</span>
+          <span data-en>Place recognition</span>
+        </h4>
+        <p>
+          <span data-ar>كاميرا الهاتف ترصد المعلَم (البئر، السقيفة، الجدار) ويُحدِّد مَدار موضع الزائر بدقّة عبر الرؤية الحاسوبية.</span>
+          <span data-en>The phone camera identifies the landmark (well, courtyard, wall) and computer vision pins the visitor's exact viewpoint.</span>
+        </p>
+      </div>
+
+      <div class="how-card">
+        <div class="how-num">02</div>
+        <svg class="how-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+          <path d="M4 19h16"/>
+          <path d="M6 19V10l6-5 6 5v9"/>
+          <path d="M10 19v-5h4v5"/>
+          <circle cx="14" cy="6" r="0.5" fill="currentColor"/>
+        </svg>
+        <h4>
+          <span data-ar>إسقاط المشهد</span>
+          <span data-en>Scene overlay</span>
+        </h4>
+        <p>
+          <span data-ar>طبقة بصرية ثلاثية الأبعاد تُسقط البناء الأصلي والشخصيات على الواقع، بحجم إنساني ومواد محترمة لقدسية المكان.</span>
+          <span data-en>A 3D scene overlays the original structure and characters onto reality — at human scale, with materials respectful of the site's sanctity.</span>
+        </p>
+      </div>
+
+      <div class="how-card">
+        <div class="how-num">03</div>
+        <svg class="how-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+          <path d="M3 12h2l2-7 4 14 3-10 2 5h5"/>
+        </svg>
+        <h4>
+          <span data-ar>سرد بالذكاء الاصطناعي</span>
+          <span data-en>AI narration</span>
+        </h4>
+        <p>
+          <span data-ar>أصوات مميَّزة لكل شخصية، باللغتين العربية والإنجليزية، مع نَبر تاريخي وأدب يحفظ مكانة الشخصيات.</span>
+          <span data-en>Distinct voices per character in Arabic and English, with a tone that honors each figure's standing in tradition.</span>
+        </p>
+      </div>
+
+      <div class="how-card">
+        <div class="how-num">04</div>
+        <svg class="how-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+          <rect x="4" y="4" width="16" height="16" rx="2"/>
+          <path d="M8 4v16M16 4v16M4 8h16M4 16h16"/>
+        </svg>
+        <h4>
+          <span data-ar>محتوى موثَّق</span>
+          <span data-en>Verified content</span>
+        </h4>
+        <p>
+          <span data-ar>كل مشهد مبنيٌّ على مصادر سيرة موثَّقة بمراجعة من أهل اختصاص، مع مراجع ظاهرة للزائر داخل التجربة.</span>
+          <span data-en>Every scene is built on verified biographical sources, reviewed by specialists, with citations visible inside the experience.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SITES ===================== -->
+<section id="sites">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="h2">
+        <span data-ar>ثلاثة مواقع للانطلاقة: السقيفة، بئر غَرَس، وبئر الفُقَير</span>
+        <span data-en>Three launch sites: Al-Suffah, Bir Ghars, and Bir Al-Fuqayr</span>
+      </h2>
+      <p class="lede">
+        <span data-ar>
+          ثلاثة مواقع رمزيّة لها حضور حيّ في الذاكرة الإسلامية، اخترناها لقابلية السرد البصري والصوتي على الأرض نفسها — وبدأنا فعليًا في تطوير المرشد الذكي لها.
+        </span>
+        <span data-en>
+          Three iconic sites — meaningful in collective memory, well suited to on-site visual and audio storytelling, and already in active development as our AI heritage guides.
+        </span>
+      </p>
+    </div>
+
+    <div class="sites-grid">
+      <!-- SITE 1: SAQIFAH -->
+      <article class="site-card">
+        <div class="site-photo">
+          <img src="images/saqifah-interior.jpg" alt="As-Suffah reconstruction interior with palm-trunk pillars and light beams" loading="lazy" />
+          <div class="site-photo-frame">
+            <svg viewBox="0 0 100 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+              <g stroke="#E5C77A" stroke-width="0.4" fill="none" opacity="0.9">
+                <path d="M2 8 L2 2 L8 2"/>
+                <path d="M98 8 L98 2 L92 2"/>
+                <path d="M2 52 L2 58 L8 58"/>
+                <path d="M98 52 L98 58 L92 58"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="site-body">
+          <span class="tag" data-ar>المسجد النبوي · ١ هـ</span>
+          <span class="tag" data-en>Prophet's Mosque · 1 AH</span>
+          <h3>
+            <span data-ar>الصُّفّة</span>
+            <span data-en>Al-Suffah</span>
+          </h3>
+          <div class="sub">
+            <span data-ar>أوّل جامعة في الإسلام</span>
+            <span data-en>The first school of Islam</span>
+          </div>
+          <p>
+            <span data-ar>
+              ركن مظلّل من المسجد النبوي سكنه فقراء المهاجرين، ودَرسوا فيه على يد النبيّ ﷺ. مَدار يُعيد بناء سَقفه ودعاماته من جذوع النخل، ويرسم لحظات تعلُّم حيّة بأصوات السيرة الموثَّقة.
+            </span>
+            <span data-en>
+              A shaded corner of the Prophet's Mosque that housed the destitute among the migrants and became a circle of learning under the Prophet ﷺ. Medar rebuilds its palm-trunk roof and pillars, and dramatizes its lessons through verified narration.
+            </span>
+          </p>
+          <div class="site-meta">
+            <span data-ar>٢٠ × ١٠ م</span><span data-en>20m × 10m</span>
+            <span data-ar>سقف من النخل</span><span data-en>Palm-frond roof</span>
+            <span data-ar>سرد عربي/إنجليزي</span><span data-en>ar/en narration</span>
+            <span data-ar>٧ مشاهد</span><span data-en>7 scenes</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- SITE 2: BIR GHARS -->
+      <article class="site-card">
+        <div class="site-photo">
+          <img src="images/bir-ghars-well.jpg" alt="Bir Ghars reconstructed well with wooden pulley frame in the Al-Awali district of Madinah" loading="lazy" />
+          <div class="site-photo-frame">
+            <svg viewBox="0 0 100 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+              <g stroke="#E5C77A" stroke-width="0.4" fill="none" opacity="0.9">
+                <path d="M2 8 L2 2 L8 2"/>
+                <path d="M98 8 L98 2 L92 2"/>
+                <path d="M2 52 L2 58 L8 58"/>
+                <path d="M98 52 L98 58 L92 58"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="site-body">
+          <span class="tag" data-ar>العَوالي · شمالي قُباء</span>
+          <span class="tag" data-en>Al-Awali · north of Quba</span>
+          <h3>
+            <span data-ar>بئر غَرَس</span>
+            <span data-en>Bir Ghars</span>
+          </h3>
+          <div class="sub">
+            <span data-ar>من أحبّ آبار النبيّ ﷺ إليه</span>
+            <span data-en>One of the Prophet's ﷺ most beloved wells</span>
+          </div>
+          <p>
+            <span data-ar>
+              بئر تاريخية في منطقة العَوالي على مسافة قريبة من مسجد قُباء، شَرِبَ منها النبيُّ ﷺ وتوضّأ بمائها، وأوصى بأن يُغسَّل بسبع قِرَب من مائها بعد وفاته. كما جاء في حديث علي بن أبي طالب رضي الله عنه عند ابن ماجه: «إذا متُّ فاغسلوني بسبع قِرَب من بئر غَرَس». مَدار يُعيد رسم البئر بإطارها الخشبي وقُلَلها، ويسرد الحديث الشريف وقصص النبيّ معها على أرضها.
+            </span>
+            <span data-en>
+              A historic well in Madinah's Al-Awali district, a short distance from Masjid Quba. The Prophet ﷺ drank from it and performed ablution with its water, and instructed that he be washed with seven water-skins from it after his passing — as narrated by Ali ibn Abi Talib (RA) in Ibn Majah: "When I die, wash me with seven water-skins from the well of Ghars." Medar reconstructs the well with its wooden frame and earthenware, and tells the hadith and its surrounding stories on the very ground.
+            </span>
+          </p>
+          <div class="site-meta">
+            <span data-ar>حديث صحيح</span><span data-en>Verified hadith</span>
+            <span data-ar>نَور بدل تجسيد</span><span data-en>Light, not figure</span>
+            <span data-ar>سرد عربي/إنجليزي</span><span data-en>ar/en narration</span>
+            <span data-ar>٤ مشاهد</span><span data-en>4 scenes</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- SITE 3: BIR AL-FUQAYR -->
+      <article class="site-card site-card-wide">
+        <div class="site-photo site-photo-portrait">
+          <img src="images/medar-app-phone.jpg" alt="Medar mobile AR experience at Bir Al-Fuqayr showing Salman Al-Farisi as the AI heritage guide" loading="lazy" />
+        </div>
+        <div class="site-body">
+          <span class="tag" data-ar>منطقة العالية · المدينة المنورة</span>
+          <span class="tag" data-en>Al-Aliyah district · Madinah</span>
+          <h3>
+            <span data-ar>بئر الفُقَير</span>
+            <span data-en>Bir Al-Fuqayr</span>
+          </h3>
+          <div class="sub">
+            <span data-ar>قصّة عتق سلمان الفارسي رضي الله عنه</span>
+            <span data-en>The story of Salman Al-Farisi's emancipation</span>
+          </div>
+          <p>
+            <span data-ar>
+              في منطقة العالية وبين مزارع النخيل، تقف بئر الفُقَير شاهدةً على قصّة عتق سلمان الفارسي رضي الله عنه. هنا غرس النبيّ ﷺ بيديه الشريفتين قرابة ٣٠٠ نخلة، فبارك الله فيها وأثمرت من عامها، ونال سلمان حرّيته. في مَدار يَظهر سلمان نفسه مرشدًا يَروي قصته بصوته.
+            </span>
+            <span data-en>
+              In Madinah's Al-Aliyah district, among the palm groves, Bir Al-Fuqayr stands as witness to the story of Salman Al-Farisi's emancipation. Here the Prophet ﷺ planted around 300 palm trees with his own blessed hands; God blessed them and they bore fruit that same year, and Salman won his freedom. In Medar, Salman himself appears as your guide, narrating the story.
+            </span>
+          </p>
+          <div class="site-meta">
+            <span data-ar>مرشد ذكي · سلمان</span><span data-en>AI guide · Salman</span>
+            <span data-ar>محادثة صوتية حيّة</span><span data-en>Live voice chat</span>
+            <span data-ar>٣٠٠ نخلة · رمز القصّة</span><span data-en>300 palms · core motif</span>
+            <span data-ar>WebAR على الهاتف</span><span data-en>Mobile WebAR</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Architecture detail -->
+    <div class="arch-detail">
+      <div class="arch-detail-img">
+        <img src="images/saqifah-architecture.jpg" alt="Architectural cross-section of As-Suffah with dimensions and structural layers" loading="lazy" />
+      </div>
+      <div>
+        <span class="tag" data-ar>دراسة معمارية موثَّقة</span>
+        <span class="tag" data-en>Documented architectural study</span>
+        <h4>
+          <span data-ar>إعادة بناء بدقّة هندسية</span>
+          <span data-en>Reconstructed with engineering precision</span>
+        </h4>
+        <p>
+          <span data-ar>
+            كل مشهد في مَدار يبدأ من دراسة معمارية موثَّقة: أبعاد، مواد البناء، طبقات السقف من جذوع وجريد النخل، وتفاصيل الإنشاء. هذه الدقّة هي ما يَفصِل التجربة الجادّة عن المحتوى المُنتَج.
+          </span>
+          <span data-en>
+            Every Medar scene starts from a documented architectural study: dimensions, building materials, palm-trunk-and-frond roof layers, and construction details. This precision is what separates serious heritage work from generated content.
+          </span>
+        </p>
+        <div class="specs">
+          <div class="spec">
+            <div class="v">200 m²</div>
+            <div class="k">
+              <span data-ar>المساحة الكلّية المُقدَّرة</span>
+              <span data-en>Estimated total area</span>
+            </div>
+          </div>
+          <div class="spec">
+            <div class="v">20 × 10 m</div>
+            <div class="k">
+              <span data-ar>الطول × العرض</span>
+              <span data-en>Length × width</span>
+            </div>
+          </div>
+          <div class="spec">
+            <div class="v">2.5 m</div>
+            <div class="k">
+              <span data-ar>الارتفاع</span>
+              <span data-en>Wall height</span>
+            </div>
+          </div>
+          <div class="spec">
+            <div class="v">3</div>
+            <div class="k">
+              <span data-ar>طبقات السقف (عوارض، جريد، طين)</span>
+              <span data-en>Roof layers (beams, fronds, clay)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Real-site gallery -->
+    <div class="scenes-grid">
+      <div class="scene">
+        <img class="scene-photo" src="images/saqifah-courtyard.jpg" alt="Saqifah-style courtyard with well, pottery, and seated figures — heritage reconstruction" loading="lazy" />
+        <div class="scene-cap">
+          <span data-ar>الفناء الداخلي · مَشهد من السيرة</span>
+          <span data-en>Interior courtyard · a scene from the seerah</span>
+        </div>
+      </div>
+
+      <div class="scene">
+        <img class="scene-photo" src="images/bir-ghars-site.jpg" alt="Bir Ghars site marker and interpretive sign in Madinah's Al-Awali district" loading="lazy" />
+        <div class="scene-cap">
+          <span data-ar>الموقع الحقيقي · بئر غَرَس بالعَوالي</span>
+          <span data-en>The actual site · Bir Ghars in Al-Awali</span>
+        </div>
+      </div>
+
+      <div class="scene">
+        <img class="scene-photo" src="images/saqifah-exterior.jpg" alt="Outdoor heritage reconstruction next to a historic Madinah mosque at sunset" loading="lazy" />
+        <div class="scene-cap">
+          <span data-ar>على الأرض ذاتها · بجوار المعلَم الأصلي</span>
+          <span data-en>On the ground itself · next to the original landmark</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ROADMAP ===================== -->
+<section id="roadmap">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="h2">
+        <span data-ar>خارطة الطريق</span>
+        <span data-en>Roadmap</span>
+      </h2>
+      <p class="lede">
+        <span data-ar>
+          من نسخة تجريبية على موقعَين إلى منصّة مفتوحة لرواية تاريخ المدينة كلِّها، ثم بقية مدن المملكة التراثية.
+        </span>
+        <span data-en>
+          From a pilot on two sites to an open platform telling Madinah's full history, then onward to Saudi Arabia's other heritage cities.
+        </span>
+      </p>
+    </div>
+
+    <div class="roadmap-track">
+      <div class="milestone">
+        <div class="when">Q2 2026</div>
+        <h4>
+          <span data-ar>إطلاق MVP</span>
+          <span data-en>MVP launch</span>
+        </h4>
+        <p>
+          <span data-ar>نسخة تجريبية لـالسقيفة، بئر غَرَس، وبئر الفُقَير، عبر متصفّح الجوال، ثنائي اللغة، بشراكة مع جهة تشغيل واحدة.</span>
+          <span data-en>Pilot of Al-Suffah, Bir Ghars, and Bir Al-Fuqayr — bilingual, browser-based, with one operating partner.</span>
+        </p>
+      </div>
+      <div class="milestone">
+        <div class="when">Q4 2026</div>
+        <h4>
+          <span data-ar>توسعة المواقع</span>
+          <span data-en>Site expansion</span>
+        </h4>
+        <p>
+          <span data-ar>إضافة أُحُد، المساجد السبعة، بئر أَريس (الخاتم)، الخندق — مع تحسين الراوي الذكي ودعم لغات إضافية (تركية، أوردو، إندونيسية).</span>
+          <span data-en>Add Uhud, Seven Mosques, Bir Ares (Al-Khatim), the Trench — improved AI narrator and added languages (Turkish, Urdu, Indonesian).</span>
+        </p>
+      </div>
+      <div class="milestone">
+        <div class="when">2027</div>
+        <h4>
+          <span data-ar>منصة مفتوحة</span>
+          <span data-en>Open platform</span>
+        </h4>
+        <p>
+          <span data-ar>أدوات تأليف للمتاحف والجهات السياحية لإنشاء مشاهدها بنفسها على بنية مَدار.</span>
+          <span data-en>Authoring tools so museums and tourism bodies can build their own scenes on Medar's stack.</span>
+        </p>
+      </div>
+      <div class="milestone">
+        <div class="when">2028+</div>
+        <h4>
+          <span data-ar>التوسّع الإقليمي</span>
+          <span data-en>Regional expansion</span>
+        </h4>
+        <p>
+          <span data-ar>الدرعية، العُلا، جدة التاريخية، ثم مواقع تراث إسلامي خارج المملكة بشراكات حكومية.</span>
+          <span data-en>Diriyah, AlUla, Historic Jeddah — then Islamic heritage sites beyond Saudi Arabia via partnerships.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TEAM ===================== -->
+<section id="team">
+  <div class="container">
+    <div class="team-grid">
+      <div>
+        <div class="eyebrow">
+          <span data-ar>من نحن</span>
+          <span data-en>About us</span>
+        </div>
+        <h2 class="h2">
+          <span data-ar>مؤسِّس تقني، بنية ذكاء اصطناعي محلّية، وفهم عميق للسوق السعودي.</span>
+          <span data-en>A technical founder, a local AI stack, and a deep grasp of the Saudi market.</span>
+        </h2>
+        <p class="lede">
+          <span data-ar>
+            مَدار يُبنى في الرياض على بنية تحتية محلّية للذكاء الاصطناعي (نماذج ضخمة على GPU محلي، أنابيب توليد بيانات، تحقُّق متعدّد الوسائط) — مع شغف بإحياء الذاكرة الإسلامية بأدوات هذا القرن. خبرة سابقة في منصات بيانات عربية، أنظمة أمن مدارة، وتصميم تجارب AR للسيرة النبوية.
+          </span>
+          <span data-en>
+            Medar is being built in Riyadh on a local AI infrastructure (large models on local GPU, data generation pipelines, multi-modal validation) — with a passion for bringing Islamic memory into this century. Prior work spans Arabic data platforms, managed security, and AR experience design for prophetic-biography sites.
+          </span>
+        </p>
+        <div class="team-stats">
+          <div class="team-stat">
+            <div class="num">150K+</div>
+            <div class="lbl">
+              <span data-ar>تحقُّق محتوى عربي شهريًا (Datafy)</span>
+              <span data-en>Monthly Arabic validations (Datafy)</span>
+            </div>
+          </div>
+          <div class="team-stat">
+            <div class="num">2</div>
+            <div class="lbl">
+              <span data-ar>مواقع تاريخية في خط الإنتاج</span>
+              <span data-en>Historic sites in production</span>
+            </div>
+          </div>
+          <div class="team-stat">
+            <div class="num">ar / en</div>
+            <div class="lbl">
+              <span data-ar>سرد ثنائي اللغة منذ اليوم الأوّل</span>
+              <span data-en>Bilingual narration from day one</span>
+            </div>
+          </div>
+          <div class="team-stat">
+            <div class="num">100%</div>
+            <div class="lbl">
+              <span data-ar>محتوى مُراجَع شرعيًا قبل النشر</span>
+              <span data-en>Content scholar-reviewed before launch</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="team-visual">
+        <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="tHalo" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#C9A24B" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#C9A24B" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="tGold" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#E5C77A"/>
+              <stop offset="100%" stop-color="#8B6F2E"/>
+            </linearGradient>
+          </defs>
+          <circle cx="250" cy="250" r="240" fill="url(#tHalo)"/>
+          <!-- arch -->
+          <path d="M120 380 L120 220 Q250 100 380 220 L380 380 Z" fill="none" stroke="url(#tGold)" stroke-width="1.5"/>
+          <path d="M140 380 L140 230 Q250 130 360 230 L360 380" fill="none" stroke="#2A3447" stroke-width="0.8"/>
+          <!-- geometric Islamic pattern -->
+          <g stroke="url(#tGold)" stroke-width="0.6" fill="none" opacity="0.8">
+            <polygon points="250,180 280,210 280,250 250,280 220,250 220,210"/>
+            <polygon points="250,170 290,210 290,250 250,290 210,250 210,210"/>
+            <line x1="220" y1="210" x2="280" y2="250"/>
+            <line x1="280" y1="210" x2="220" y2="250"/>
+            <line x1="250" y1="170" x2="250" y2="290"/>
+            <line x1="210" y1="230" x2="290" y2="230"/>
+          </g>
+          <!-- orbit -->
+          <circle cx="250" cy="230" r="80" fill="none" stroke="url(#tGold)" stroke-width="0.5" stroke-dasharray="2 4" opacity="0.7"/>
+          <circle cx="250" cy="230" r="60" fill="none" stroke="url(#tGold)" stroke-width="0.3" stroke-dasharray="1 3" opacity="0.5"/>
+          <!-- ground line -->
+          <line x1="60" y1="380" x2="440" y2="380" stroke="#2A3447" stroke-width="1"/>
+          <!-- palms -->
+          <g stroke="url(#tGold)" stroke-width="1" fill="none" opacity="0.5">
+            <line x1="80" y1="380" x2="80" y2="310"/>
+            <path d="M80 310 Q65 295 50 300 M80 310 Q95 290 110 296 M80 318 Q60 318 45 330 M80 318 Q100 318 115 330"/>
+            <line x1="420" y1="380" x2="420" y2="310"/>
+            <path d="M420 310 Q405 295 390 300 M420 310 Q435 290 450 296"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTACT ===================== -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-wrap">
+      <div class="contact-grid">
+        <div class="contact-side">
+          <div class="eyebrow">
+            <span data-ar>تواصل · شراكات · عروض تجريبية</span>
+            <span data-en>Contact · Partnerships · Demos</span>
+          </div>
+          <h3>
+            <span data-ar>هل أنت من جهة سياحية أو حكومية؟ لنتحدّث.</span>
+            <span data-en>From a tourism body or government entity? Let's talk.</span>
+          </h3>
+          <p>
+            <span data-ar>
+              نُقدِّم عروضًا تجريبية على أرض الواقع في الرياض، وبرامج رائدة (Pilot) في المدينة المنورة بالشراكة مع جهات تشغيل المواقع. اكتب لنا، ونعود إليك خلال يومَي عمل.
+            </span>
+            <span data-en>
+              We offer hands-on demos in Riyadh and pilot programs in Madinah in partnership with site operators. Reach out — we respond within two business days.
+            </span>
+          </p>
+          <ul>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8l9 6 9-6"/><rect x="3" y="6" width="18" height="14" rx="2"/></svg>
+              fadel.a.alobaidi@gmail.com
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-7.5-7-12a7 7 0 1114 0c0 4.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              <span data-ar>الرياض، المملكة العربية السعودية</span>
+              <span data-en>Riyadh, Kingdom of Saudi Arabia</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>
+              <span data-ar>متاح لشراكات مع: Humain · SDAIA · وزارة السياحة · هيئة التراث</span>
+              <span data-en>Open to partnerships with: Humain · SDAIA · Ministry of Tourism · Heritage Commission</span>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <form id="medarForm" onsubmit="return false">
+            <div class="field">
+              <label data-ar>الاسم</label>
+              <label data-en>Name</label>
+              <input type="text" name="name" required />
+            </div>
+            <div class="field">
+              <label data-ar>الجهة</label>
+              <label data-en>Organization</label>
+              <input type="text" name="org" />
+            </div>
+            <div class="field">
+              <label data-ar>البريد الإلكتروني</label>
+              <label data-en>Email</label>
+              <input type="email" name="email" required />
+            </div>
+            <div class="field">
+              <label data-ar>نوع التواصل</label>
+              <label data-en>Inquiry type</label>
+              <select name="type">
+                <option value="demo" data-ar-text="طلب عرض تجريبي" data-en-text="Request a demo">Request a demo</option>
+                <option value="pilot" data-ar-text="برنامج تجريبي مشترك" data-en-text="Pilot partnership">Pilot partnership</option>
+                <option value="invest" data-ar-text="استثمار" data-en-text="Investment">Investment</option>
+                <option value="press" data-ar-text="إعلام / صحافة" data-en-text="Press / media">Press / media</option>
+                <option value="other" data-ar-text="أخرى" data-en-text="Other">Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label data-ar>الرسالة</label>
+              <label data-en>Message</label>
+              <textarea name="message" rows="4"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary" id="submitBtn" style="width:100%; justify-content:center;">
+              <span data-ar>إرسال الطلب</span>
+              <span data-en>Send inquiry</span>
+              <span class="arrow">→</span>
+            </button>
+            <div id="formMsg" style="margin-top:14px; color: var(--gold-2); font-size: 14px; display:none;">
+              <span data-ar>شكرًا — استلمنا طلبك. سنعود إليك قريبًا.</span>
+              <span data-en>Thank you — your inquiry was received. We'll be in touch soon.</span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="brand" style="margin-bottom:8px">
+        <svg class="brand-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="fg1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#E5C77A"/>
+              <stop offset="100%" stop-color="#8B6F2E"/>
+            </linearGradient>
+          </defs>
+          <circle cx="32" cy="32" r="28" stroke="url(#fg1)" stroke-width="1.5" fill="none" opacity="0.55"/>
+          <path d="M10 18 L10 10 L18 10 M54 18 L54 10 L46 10 M10 46 L10 54 L18 54 M54 46 L54 54 L46 54" stroke="#E5C77A" stroke-width="2" fill="none"/>
+          <circle cx="32" cy="32" r="5.5" fill="url(#fg1)"/>
+          <circle cx="32" cy="32" r="2" fill="#0B0F18"/>
+        </svg>
+        <div>
+          <div class="brand-name"><span class="accent">Med</span>Ar</div>
+          <div class="brand-tag">
+            <span data-ar>المدينة · معزّزة</span>
+            <span data-en>Madinah · Augmented</span>
+          </div>
+        </div>
+      </div>
+      <small data-ar>© ٢٠٢٦ مَدار. جميع الحقوق محفوظة.</small>
+      <small data-en>© 2026 Medar. All rights reserved.</small>
+    </div>
+    <div style="text-align: end; max-width: 420px;">
+      <small>
+        <span data-ar>مَدار يُبنى باحترامٍ تامٍّ لمكانة المواقع الإسلامية، وبمراجعة المختصّين. كل المحتوى يعتمد على مصادر السيرة والتاريخ الموثَّقة.</span>
+        <span data-en>Medar is built with full respect for the sanctity of Islamic sites and reviewed by specialists. All content is anchored in verified biographical and historical sources.</span>
+      </small>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Language toggle
+  (function(){
+    const html = document.documentElement;
+    const buttons = document.querySelectorAll('[data-lang-btn]');
+    function setLang(lang){
+      html.setAttribute('data-lang', lang);
+      html.setAttribute('lang', lang);
+      html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+      buttons.forEach(b => b.classList.toggle('active', b.getAttribute('data-lang-btn') === lang));
+      // update document title
+      document.title = lang === 'ar'
+        ? 'مدار · MedAr — تجارب AI/AR غامرة في المدينة المنورة'
+        : 'Medar — Immersive AI/AR experiences for Madinah';
+      try{ localStorage.setItem('medar.lang', lang); } catch(e){}
+    }
+    buttons.forEach(btn => btn.addEventListener('click', () => setLang(btn.getAttribute('data-lang-btn'))));
+    // restore
+    try{
+      const saved = localStorage.getItem('medar.lang');
+      if(saved) setLang(saved);
+    } catch(e){}
+  })();
+
+  // Mobile menu toggle
+  (function(){
+    const toggle = document.getElementById('navToggle');
+    const inner = document.getElementById('navInner');
+    if(toggle){
+      toggle.addEventListener('click', () => inner.classList.toggle('open'));
+    }
+    // close on link click
+    document.querySelectorAll('#mobileMenu a').forEach(a => {
+      a.addEventListener('click', () => inner.classList.remove('open'));
+    });
+  })();
+
+  // Reveal on scroll
+  (function(){
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          e.target.classList.add('in');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('section, .stat, .how-card, .site-card, .scene, .milestone').forEach(el => {
+      el.classList.add('reveal');
+      obs.observe(el);
+    });
+  })();
+
+  // Form (client-side only; replace with real endpoint when ready)
+  (function(){
+    const btn = document.getElementById('submitBtn');
+    if(!btn) return;
+    btn.addEventListener('click', () => {
+      const form = document.getElementById('medarForm');
+      const data = new FormData(form);
+      const email = (data.get('email') || '').toString().trim();
+      const name = (data.get('name') || '').toString().trim();
+      if(!email || !name){
+        alert(document.documentElement.getAttribute('data-lang') === 'ar'
+          ? 'الرجاء إدخال الاسم والبريد الإلكتروني.'
+          : 'Please enter your name and email.');
+        return;
+      }
+      // Build mailto fallback so this works on GitHub Pages without a backend
+      const subj = encodeURIComponent('Medar inquiry — ' + (data.get('type') || ''));
+      const body = encodeURIComponent(
+        'Name: ' + name + '\n' +
+        'Organization: ' + (data.get('org') || '') + '\n' +
+        'Email: ' + email + '\n' +
+        'Type: ' + (data.get('type') || '') + '\n\n' +
+        'Message:\n' + (data.get('message') || '')
+      );
+      window.location.href = 'mailto:fadel.a.alobaidi@gmail.com?subject=' + subj + '&body=' + body;
+      document.getElementById('formMsg').style.display = 'block';
+    });
+  })();
+</script>
+</body>
+</html>
